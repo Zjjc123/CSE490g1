@@ -11,7 +11,14 @@ tensor matrix_transpose(tensor a)
 {
     assert(a.n == 2);
     // TODO 1.0: return a transposed version of a (don't modify a)
-    tensor t = tensor_make(0, 0);
+    size_t b_size[] = {a.size[1], a.size[0]};
+    tensor t = tensor_make(a.n, b_size);
+
+    for(int i = 0; i < a.size[0]; ++i) {
+        for(int j = 0; j < a.size[1]; ++j) {
+            t.data[i * a.size[1] + j] = a.data[j * a.size[0] + i];
+        }
+    }
 
     return t;
 }
@@ -25,7 +32,20 @@ tensor matrix_multiply(const tensor a, const tensor b)
     assert(b.n == 2);
     assert(a.size[1] == b.size[0]);
     // TODO 1.1: matrix multiplication! just use 3 for loops 
-    tensor t = tensor_make(0, 0);
+    size_t c[] = {a.size[0], b.size[1]};
+    tensor t = tensor_make(a.n, c);
+
+    // mxn TIMES nxk
+    // dimension m
+    for(int i = 0; i < a.size[0]; i++) {
+        // dimension k
+        for (int j = 0; j < b.size[1]; j++) {
+            // shared dimension
+            for (int k = 0; k < b.size[0]; k++) {
+                t.data[i * b.size[1] + j] += a.data[i * a.size[1] + k] * b.data[k * b.size[1] + j];
+            }
+        }
+    }
 
     return t;
 }
